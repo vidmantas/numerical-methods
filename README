@@ -1,0 +1,7 @@
+Little apps for numerical methods course in Vilnius University, software 
+engineering. 
+
+All examples are written with Ruby (1.9 compatible, some are 
+especially for 1.9, see first line). 
+
+Based on theory from http://uosis.mif.vu.lt/~olgas/
