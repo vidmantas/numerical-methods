@@ -4,7 +4,7 @@ require 'benchmark'
 
 include Math
 
-class Gaus
+class Gauss
   def initialize(function, high, low)
     @function, @high, @low = function, high, low
   end
@@ -27,6 +27,6 @@ class Gaus
 end
 
 formula = Function.new "X*cos(2*(X**2))"
-g = Gaus.new(formula, 0, PI/2)
+g = Gauss.new(formula, 0, PI/2)
 time = Benchmark.realtime { puts "Answer: \t #{g.solve}" }
 puts "Execution time:\t #{time}"
