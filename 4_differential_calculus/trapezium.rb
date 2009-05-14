@@ -35,12 +35,14 @@ print "Result".center(20)
 print " | "
 print " Runge ".center(20)
 print " | " 
+print " Runge / Runge - 1".center(20)
+print " | "
 print " Execution time ".center(20)
 puts
 100.times { print "-" }
 puts
 
-next_result, next_h = nil
+next_result, next_h, last_runge = nil
 
 5.times do |i|
   time = Benchmark.realtime do
@@ -60,7 +62,17 @@ next_result, next_h = nil
     
     print result.to_s.center(20)
     print " | "
-    print (next_result - result).abs.to_s.center(20)
+    runge = (next_result - result).abs
+    print runge.to_s.center(20)
+    print " | "
+    
+    if last_runge 
+      print (last_runge/runge).to_s.center(20)
+    else
+      print " ".center(20)
+    end
+    
+    last_runge = runge
   end
   
   print " | " 
