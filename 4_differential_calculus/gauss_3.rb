@@ -11,17 +11,16 @@ class Gauss
   
   def solve(low = @low, high = @high)
     dx = (high - low)/2
-    x = "(((#{low} + #{high}))/2 + (((#{high} - #{low}))/2)*X)"
+    x = "((#{low} + #{high})/2 + (((#{high} - #{low})/2)*X))"
     gs = Function.new(@function.formula.gsub("X", x))
-    #puts x
     
     # coefficients
-    c1 = 0.5555556
-    c2 = 0.8888889
-    c3 = 0.5555556
-    x1 = -0.774596669
+    c1 = 5.0/9
+    c2 = 8.0/9
+    c3 = 5.0/9
+    x1 = -1*sqrt(5.0/3)
     x2 = 0.0
-    x3 = 0.774596669
+    x3 = sqrt(5.0/3)
     
     dx*(c1 * gs.value(x1)  + c2 * gs.value(x2) + c3 * gs.value(x3))
   end
@@ -45,6 +44,7 @@ class MGauss < Gauss
     puts 
     
     last_runge = nil
+    last_d = nil
     
     iterations = 0
     while true
@@ -54,23 +54,31 @@ class MGauss < Gauss
       print " | "
       print answer.to_s.center(20)
       print " | "
-      runge = (answer - get(@m/2, false)).abs / (2**(3*2) - 1)
+      runge = (answer - get(@m/2, false)).abs / 63 # 2**(3*2) - 1
       print runge.to_s.center(20) 
       print " | "
       
       if last_runge   
         print last_runge/runge
+      else
+        print " ".center(20)
       end
+      
+      d= 0.2273243567 - answer
+      print " | #{d}"
+      if last_d 
+        print " | #{last_d/d}"
+      end
+      last_runge = runge
       puts
       
-      last_runge = runge
-        
-      break if @epsilon >= runge
+      #break if @epsilon >= runge
       
       @m = 2*@m
       last_answer = answer
+      last_d = d
       iterations += 1
-      break if iterations == 20
+      break if iterations == 10
     end
   end
   
@@ -93,18 +101,21 @@ class MGauss < Gauss
   end
 end
 
+#formula = Function.new "X+1"
 formula = Function.new "X*cos(2*(X**2))"
+#formula = Function.new "(X**2)*sin(2*X)"
+#formula = Function.new "2**X"
+#formula = Function.new "X"
 #g = Gauss.new(formula, 0.785398163397448, 1.5707963267949)
 #time = Benchmark.realtime { puts "Answer: \t #{g.solve}" }
 #puts "Execution time:\t #{time}"
 
-#=begin
 if ARGV.size != 2 
   puts "Please enter m and epsilon"
 else 
   m = ARGV.first.to_i
   e = ARGV.last.to_f
-  g = MGauss.new(formula, 0, PI/2, m, e)
+  g = MGauss.new(formula, 0, 1, m, e)
   g.calculate
 end
-#=end
+
